@@ -1,4 +1,4 @@
-/** Deterministic PRNG (mulberry32) — same seed always produces the same sequence. */
+/** Deterministic PRNG (mulberry32). Same seed always produces the same sequence. */
 export function mulberry32(seed: number) {
   let a = seed;
   return function next(): number {

@@ -10,7 +10,7 @@ export function Footer() {
             <Logo />
             <p className="max-w-sm text-sm text-muted-foreground">
               A public explorer for property values signed by ChatARV and
-              published on Stellar. Not a wallet. Not a payments product.
+              published on Stellar.
             </p>
           </div>
 

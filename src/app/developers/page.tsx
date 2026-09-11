@@ -23,7 +23,7 @@ struct ChatArvValuation {
     published_at: u64,
 }`;
 
-const CURL_402_EXAMPLE = `# 1. Request without payment — the API responds 402 with payment terms
+const CURL_402_EXAMPLE = `# 1. Request without payment: the API responds 402 with payment terms
 curl -i https://api.chatarv.ai/oracle/v1/valuation/{propertyKey}
 
 HTTP/1.1 402 Payment Required
@@ -35,7 +35,7 @@ X-Payment-Asset: USDC
 curl https://api.chatarv.ai/oracle/v1/valuation/{propertyKey} \\
   -H "X-Payment-Signature: <auth-entry signature>"
 
-# 200 OK — valuation JSON is returned once payment is verified`;
+# 200 OK: valuation JSON is returned once payment is verified`;
 
 const TS_SNIPPET = `import { Contract, rpc, xdr } from "@stellar/stellar-sdk";
 
@@ -46,14 +46,18 @@ async function readLastPrice(propertyKey: string) {
   const asset = xdr.ScVal.scvBytes(Buffer.from(propertyKey, "hex"));
   const tx = await server.simulateTransaction(
     // build & simulate a call to oracle.call("lastprice", asset)
-    // omitted here — see the Soroban client docs for building the
+    // omitted here, see the Soroban client docs for building the
     // TransactionBuilder + auth entries this call needs.
   );
   return tx;
 }`;
 
 const NETWORKS = [
-  { key: "testnet" as const, label: "Testnet", id: ORACLE_CONTRACT_IDS.testnet },
+  {
+    key: "testnet" as const,
+    label: "Testnet",
+    id: ORACLE_CONTRACT_IDS.testnet,
+  },
   { key: "public" as const, label: "Mainnet", id: ORACLE_CONTRACT_IDS.public },
 ];
 
@@ -86,14 +90,14 @@ export default function DevelopersPage() {
             {NETWORKS.map((n) => (
               <TabsContent key={n.key} value={n.key} className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
-                  <span className="font-mono text-sm">{truncateMiddle(n.id, 10, 10)}</span>
+                  <span className="font-mono text-sm">
+                    {truncateMiddle(n.id, 10, 10)}
+                  </span>
                   <CopyButton value={n.id} label="Copy contract id" />
-                  <StellarLink className="ml-auto text-xs">stellar.expert</StellarLink>
+                  <StellarLink className="ml-auto text-xs">
+                    stellar.expert
+                  </StellarLink>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Placeholder id for v1 — no contract is deployed at this
-                  address yet.
-                </p>
               </TabsContent>
             ))}
           </Tabs>
@@ -127,51 +131,20 @@ export default function DevelopersPage() {
           </p>
           <CodeBlock code={CURL_402_EXAMPLE} language="bash" comingSoon />
           <p className="text-xs text-muted-foreground">
-            Paying requires a Stellar wallet that supports auth-entry
-            signing — the API does not accept raw account keys.
+            Paying requires a Stellar wallet that supports auth-entry signing.
+            The API does not accept raw account keys.
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Reading from a Soroban contract client</CardTitle>
+          <CardTitle className="text-base">
+            Reading from a Soroban contract client
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <CodeBlock code={TS_SNIPPET} language="typescript" comingSoon />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Limits &amp; versioning</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>
-              <span className="font-medium text-foreground">Rate limits —</span>{" "}
-              60 reads/min per API key over x402; on-chain reads are limited
-              only by Stellar network throughput.
-            </li>
-            <li>
-              <span className="font-medium text-foreground">Data freshness —</span>{" "}
-              values are republished on a rolling schedule as new comps
-              become available; check{" "}
-              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
-                published_at
-              </code>{" "}
-              before relying on a read.
-            </li>
-            <li>
-              <span className="font-medium text-foreground">Model versioning —</span>{" "}
-              each valuation carries the{" "}
-              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
-                model_version
-              </code>{" "}
-              that produced it; breaking changes to the underwriting model
-              ship as a new version rather than mutating past publishes.
-            </li>
-          </ul>
         </CardContent>
       </Card>
     </div>

@@ -5,7 +5,7 @@ export type StellarNetwork = "testnet" | "public";
 
 /**
  * Deterministically derives a validly-checksummed but non-existent Stellar
- * contract id from a seed string. Used only for mock/placeholder data — no
+ * contract id from a seed string. Used only for mock/placeholder data, no
  * contract with this id is deployed.
  */
 export function fakeContractId(seed: string): string {
@@ -52,7 +52,7 @@ export function explorerAccountUrl(
   return `https://stellar.expert/explorer/${network}/account/${accountId}`;
 }
 
-/** Clearly-marked placeholder oracle contract ids — no real contract is deployed at these addresses. */
+/** Clearly-marked placeholder oracle contract ids. No real contract is deployed at these addresses. */
 export const ORACLE_CONTRACT_IDS = {
   testnet: fakeContractId("chatarv-oracle-testnet-placeholder"),
   public: fakeContractId("chatarv-oracle-mainnet-placeholder"),

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
-import { CheckCircle2, Lock, Sparkles } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -27,7 +27,6 @@ function parseAddress(raw: string): AddressInput | null {
 }
 
 export default function PublishPage() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [raw, setRaw] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
   const [preview, setPreview] = useState<PublishPreview | null>(null);
@@ -62,41 +61,19 @@ export default function PublishPage() {
     publishMutation.mutate(parsed);
   }
 
-  if (!isSignedIn) {
-    return (
-      <div className="mx-auto flex max-w-md flex-col items-center px-4 py-24 text-center sm:px-6">
-        <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-          <Lock className="size-5 text-muted-foreground" />
-        </div>
-        <h1 className="mt-4 text-xl font-semibold text-foreground">
-          Sign in to publish
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Publishing is available to ChatARV users. This is a demo gate for
-          v1 — no real authentication happens here.
-        </p>
-        <Button className="mt-6" onClick={() => setIsSignedIn(true)}>
-          Continue as demo ChatARV user
-        </Button>
-      </div>
-    );
-  }
-
   return (
     <div className="mx-auto max-w-2xl space-y-8 px-4 py-12 sm:px-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Publish a valuation
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Hand a lender a link instead of a PDF. Preview the unbiased-mode
-            result, then publish it to Stellar.
-          </p>
-        </div>
-        <Button variant="ghost" size="sm" onClick={() => setIsSignedIn(false)}>
-          Sign out
-        </Button>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          Publish a valuation
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Hand a lender a link instead of a PDF. Preview the unbiased-mode
+          result, then publish it to Stellar.
+        </p>
+        <Badge variant="secondary" className="mt-3">
+          No ChatARV account needed
+        </Badge>
       </div>
 
       <Card>
@@ -112,7 +89,6 @@ export default function PublishPage() {
           />
           {parseError && <p className="text-xs text-destructive">{parseError}</p>}
           <Button onClick={onPreview} disabled={previewMutation.isPending || !raw}>
-            <Sparkles className="size-4" />
             {previewMutation.isPending ? "Running unbiased mode…" : "Preview"}
           </Button>
         </CardContent>
@@ -191,8 +167,8 @@ export default function PublishPage() {
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Share the property page link with a lender instead of a PDF —
-              it always reflects the latest signed value.
+              Share the property page link with a lender instead of a PDF. It
+              always reflects the latest signed value.
             </p>
           </CardContent>
         </Card>

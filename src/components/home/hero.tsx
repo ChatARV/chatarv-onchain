@@ -37,19 +37,19 @@ export function Hero() {
             <div>
               <dt className="text-sm text-muted-foreground">Properties published</dt>
               <dd className="mt-1 font-mono text-3xl font-semibold tabular-nums text-foreground">
-                {stats ? <NumberTicker value={stats.propertiesPublished} className="text-foreground" /> : "—"}
+                {stats ? <NumberTicker value={stats.propertiesPublished} className="text-foreground" /> : "..."}
               </dd>
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Reads served</dt>
               <dd className="mt-1 font-mono text-3xl font-semibold tabular-nums text-foreground">
-                {stats ? <NumberTicker value={stats.readsServed} className="text-foreground" /> : "—"}
+                {stats ? <NumberTicker value={stats.readsServed} className="text-foreground" /> : "..."}
               </dd>
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Last publish</dt>
               <dd className="mt-1 text-3xl font-semibold text-foreground">
-                {stats ? formatTimeAgo(stats.lastPublishAt) : "—"}
+                {stats ? formatTimeAgo(stats.lastPublishAt) : "..."}
               </dd>
             </div>
           </dl>
