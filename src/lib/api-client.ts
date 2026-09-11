@@ -1,18 +1,14 @@
 import { z } from "zod";
 import {
   FeedEntrySchema,
-  PropertySchema,
   PropertySummarySchema,
   PublishPreviewSchema,
   PublishResultSchema,
-  ReadEventSchema,
   StatsSchema,
   type FeedEntry,
-  type Property,
   type PropertySummary,
   type PublishPreview,
   type PublishResult,
-  type ReadEvent,
   type Stats,
 } from "./schemas";
 
@@ -39,14 +35,6 @@ export function fetchProperties(query?: string, limit?: number): Promise<Propert
   if (limit) params.set("limit", String(limit));
   const qs = params.toString();
   return fetchJson(`/api/oracle/properties${qs ? `?${qs}` : ""}`, z.array(PropertySummarySchema));
-}
-
-export function fetchProperty(key: string): Promise<Property> {
-  return fetchJson(`/api/oracle/properties/${key}`, PropertySchema);
-}
-
-export function fetchReads(key: string): Promise<ReadEvent[]> {
-  return fetchJson(`/api/oracle/properties/${key}/reads`, z.array(ReadEventSchema));
 }
 
 export interface AddressInput {

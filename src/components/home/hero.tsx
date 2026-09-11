@@ -7,9 +7,10 @@ import { AddressSearch } from "@/components/search/address-search";
 import { useStats } from "@/hooks/use-oracle";
 import { formatTimeAgo } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import type { Stats } from "@/lib/schemas";
 
-export function Hero() {
-  const { data: stats } = useStats();
+export function Hero({ initialStats }: { initialStats: Stats }) {
+  const { data: stats } = useStats(initialStats);
 
   return (
     <section className="relative overflow-hidden border-b border-border/80">
@@ -37,27 +38,19 @@ export function Hero() {
             <div>
               <dt className="text-sm text-muted-foreground">Properties published</dt>
               <dd className="mt-1 font-mono text-3xl font-semibold tabular-nums text-foreground">
-                {stats ? (
-                  <NumberTicker value={stats.propertiesPublished} className="text-foreground" />
-                ) : (
-                  "..."
-                )}
+                <NumberTicker value={stats.propertiesPublished} className="text-foreground" />
               </dd>
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Reads served</dt>
               <dd className="mt-1 font-mono text-3xl font-semibold tabular-nums text-foreground">
-                {stats ? (
-                  <NumberTicker value={stats.readsServed} className="text-foreground" />
-                ) : (
-                  "..."
-                )}
+                <NumberTicker value={stats.readsServed} className="text-foreground" />
               </dd>
             </div>
             <div>
               <dt className="text-sm text-muted-foreground">Last publish</dt>
               <dd className="mt-1 text-3xl font-semibold text-foreground">
-                {stats ? formatTimeAgo(stats.lastPublishAt) : "..."}
+                {formatTimeAgo(stats.lastPublishAt)}
               </dd>
             </div>
           </dl>

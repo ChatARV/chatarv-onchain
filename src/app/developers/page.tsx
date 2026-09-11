@@ -3,8 +3,17 @@ import { CodeBlock } from "@/components/code-block";
 import { StellarLink } from "@/components/stellar-link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ORACLE_CONTRACT_IDS, truncateMiddle } from "@/lib/stellar";
+import { STABILITY_FACTORS } from "@/lib/stability";
 
 const SEP40_INTERFACE = `// SEP-40-style read interface
 fn lastprice(asset: Asset) -> Option<PriceData>;
@@ -52,6 +61,12 @@ async function readLastPrice(propertyKey: string) {
   return tx;
 }`;
 
+const STABILITY_FORMULA = `for each of the 7 factors:
+  normalized = clamp((value - min) / (max - min), 0, 1)
+  if "lower is better": normalized = 1 - normalized
+
+stabilityIndex = round(clamp(sum(weight * normalized), 0, 1) * 100)`;
+
 const NETWORKS = [
   {
     key: "testnet" as const,
@@ -90,11 +105,56 @@ export default function DevelopersPage() {
                 <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
                   <span className="font-mono text-sm">{truncateMiddle(n.id, 10, 10)}</span>
                   <CopyButton value={n.id} label="Copy contract id" />
+                  <Badge variant="secondary" className="text-[10px]">
+                    Placeholder
+                  </Badge>
                   <StellarLink className="ml-auto text-xs">stellar.expert</StellarLink>
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Placeholder id for v1. No contract is deployed at this address yet.
+                </p>
               </TabsContent>
             ))}
           </Tabs>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Stability Index formula</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            The index is a weighted average of seven inputs, each normalized to a 0-1 &quot;goodness&quot;
+            score before weighting, then scaled to 0-100. It is derived, not random: two properties
+            with the same inputs always get the same index.
+          </p>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Factor</TableHead>
+                  <TableHead>Weight</TableHead>
+                  <TableHead>Direction</TableHead>
+                  <TableHead className="text-right">Range</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {STABILITY_FACTORS.map((factor) => (
+                  <TableRow key={factor.key}>
+                    <TableCell>{factor.label}</TableCell>
+                    <TableCell>{Math.round(factor.weight * 100)}%</TableCell>
+                    <TableCell>{factor.better === "higher" ? "Higher is better" : "Lower is better"}</TableCell>
+                    <TableCell className="text-right font-mono text-xs">
+                      {factor.range[0]}–{factor.range[1]}
+                      {factor.unit}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <CodeBlock code={STABILITY_FORMULA} language="typescript" />
         </CardContent>
       </Card>
 

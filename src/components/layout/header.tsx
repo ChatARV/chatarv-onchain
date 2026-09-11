@@ -27,18 +27,12 @@ export function Header() {
         <Logo />
 
         {!isHome && (
-          <div className="hidden flex-1 justify-center md:flex">
+          <div className="min-w-0 flex-1 sm:flex sm:justify-center">
             <AddressSearch variant="header" />
           </div>
         )}
 
-        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1">
-          {!isHome && (
-            <div className="min-w-0 flex-1 sm:max-w-40 sm:flex-none md:hidden">
-              <AddressSearch variant="header" className="max-w-none" />
-            </div>
-          )}
-
+        <div className="ml-auto flex items-center gap-1">
           <nav className="hidden items-center gap-1 sm:flex">
             {NAV_LINKS.map((link) => (
               <Link

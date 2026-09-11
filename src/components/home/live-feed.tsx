@@ -33,8 +33,8 @@ function FeedRow({ entry }: { entry: FeedEntry }) {
   );
 }
 
-export function LiveFeed() {
-  const { data: feed, isLoading } = useFeed(10);
+export function LiveFeed({ initialFeed }: { initialFeed: FeedEntry[] }) {
+  const { data: feed } = useFeed(10, initialFeed);
 
   return (
     <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">
@@ -48,7 +48,7 @@ export function LiveFeed() {
         </span>
       </div>
 
-      {isLoading || !feed ? (
+      {feed.length === 0 ? (
         <div className="space-y-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-16 w-full rounded-lg" />

@@ -71,9 +71,6 @@ export default function PublishPage() {
           Hand a lender a link instead of a PDF. Preview the unbiased-mode result, then publish it
           to Stellar.
         </p>
-        <Badge variant="secondary" className="mt-3">
-          No ChatARV account needed
-        </Badge>
       </div>
 
       <Card>

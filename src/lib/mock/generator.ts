@@ -3,6 +3,7 @@ import { generateAddressPool } from "./addresses";
 import { propertyKey, sha256Hex } from "../hash";
 import { computeStabilityIndex } from "../stability";
 import { fakeContractId, fakeTxHash } from "../stellar";
+import { X402_FEE_USDC } from "../pricing";
 import type {
   ConsumerType,
   FeedEntry,
@@ -151,7 +152,7 @@ export function getDataset(): OracleDataset {
         consumerAddress: consumer.address,
         consumerType: consumer.type,
         timestamp: readAt,
-        feeUsdc: Math.round(rng.float(0.01, 0.05) * 1000) / 1000,
+        feeUsdc: X402_FEE_USDC,
       });
     }
   }
@@ -176,7 +177,13 @@ export function listProperties(query?: string): PropertySummary[] {
 }
 
 export function getProperty(key: string): Property | undefined {
-  return getDataset().properties.find((p) => p.key === key);
+  const property = getDataset().properties.find((p) => p.key === key);
+  if (!property) return undefined;
+
+  return {
+    ...property,
+    history: [...property.history].sort((a, b) => a.publishedAt.localeCompare(b.publishedAt)),
+  };
 }
 
 export function getReadsForProperty(key: string): ReadEvent[] {

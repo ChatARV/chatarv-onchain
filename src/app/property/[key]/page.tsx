@@ -1,7 +1,6 @@
-"use client";
-
-import { use } from "react";
-import { useProperty, useReads } from "@/hooks/use-oracle";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getProperty, getReadsForProperty } from "@/lib/mock";
 import { CopyButton } from "@/components/copy-button";
 import { StellarLink } from "@/components/stellar-link";
 import { StabilityGauge } from "@/components/property/stability-gauge";
@@ -10,41 +9,43 @@ import { ValuationChart } from "@/components/property/valuation-chart";
 import { ReadsTable } from "@/components/property/reads-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { formatDateTime, formatTimeAgo, formatUsd } from "@/lib/format";
+import { formatDate, formatDateTime, formatTimeAgo, formatUsd } from "@/lib/format";
 import { truncateMiddle } from "@/lib/stellar";
 
-export default function PropertyPage({ params }: { params: Promise<{ key: string }> }) {
-  const { key } = use(params);
-  const { data: property, isLoading, isError } = useProperty(key);
-  const { data: reads } = useReads(key);
+interface PropertyPageProps {
+  params: Promise<{ key: string }>;
+}
 
-  if (isLoading) {
-    return (
-      <div className="mx-auto max-w-5xl space-y-8 px-4 py-12 sm:px-6">
-        <Skeleton className="h-24 w-full rounded-xl" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Skeleton className="h-40 rounded-xl" />
-          <Skeleton className="h-40 rounded-xl" />
-          <Skeleton className="h-40 rounded-xl" />
-        </div>
-        <Skeleton className="h-72 w-full rounded-xl" />
-      </div>
-    );
+export async function generateMetadata({ params }: PropertyPageProps): Promise<Metadata> {
+  const { key } = await params;
+  const property = getProperty(key);
+
+  if (!property) {
+    return { title: "Property not found | ChatARV Oracle" };
   }
 
-  if (isError || !property) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
-        <h1 className="text-xl font-semibold text-foreground">Property not found</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          No published value exists for this property key.
-        </p>
-      </div>
-    );
+  const { latest } = property;
+  const title = `${property.address}, ${property.city}, ${property.state}`;
+  const description = `As-is ${formatUsd(latest.asIsValue)} · ARV ${formatUsd(latest.arv)} · Stability ${latest.stabilityIndex} · published on Stellar ${formatDate(latest.publishedAt)}`;
+
+  return {
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { card: "summary", title, description },
+  };
+}
+
+export default async function PropertyPage({ params }: PropertyPageProps) {
+  const { key } = await params;
+  const property = getProperty(key);
+
+  if (!property) {
+    notFound();
   }
 
+  const reads = getReadsForProperty(key);
   const { latest } = property;
 
   return (
@@ -110,8 +111,12 @@ export default function PropertyPage({ params }: { params: Promise<{ key: string
               Stability Index
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex items-center justify-center">
+          <CardContent className="flex flex-col items-center justify-center gap-2">
             <StabilityGauge value={latest.stabilityIndex} />
+            <p className="text-center text-[11px] leading-snug text-muted-foreground">
+              Confidence is the engine&apos;s certainty in the comp match. Stability is how much the
+              value should be trusted over time.
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -149,7 +154,7 @@ export default function PropertyPage({ params }: { params: Promise<{ key: string
           <CardTitle className="text-base">Reads</CardTitle>
         </CardHeader>
         <CardContent>
-          <ReadsTable reads={reads ?? []} />
+          <ReadsTable reads={reads} />
         </CardContent>
       </Card>
 
