@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   const limit = limitParam ? Number(limitParam) : undefined;
 
   const results = listProperties(q);
-  const page = typeof limit === "number" && Number.isFinite(limit) ? results.slice(0, limit) : results;
+  const page =
+    typeof limit === "number" && Number.isFinite(limit) ? results.slice(0, limit) : results;
 
   return NextResponse.json(z.array(PropertySummarySchema).parse(page));
 }

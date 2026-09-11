@@ -38,10 +38,7 @@ export function fetchProperties(query?: string, limit?: number): Promise<Propert
   if (query) params.set("q", query);
   if (limit) params.set("limit", String(limit));
   const qs = params.toString();
-  return fetchJson(
-    `/api/oracle/properties${qs ? `?${qs}` : ""}`,
-    z.array(PropertySummarySchema),
-  );
+  return fetchJson(`/api/oracle/properties${qs ? `?${qs}` : ""}`, z.array(PropertySummarySchema));
 }
 
 export function fetchProperty(key: string): Promise<Property> {

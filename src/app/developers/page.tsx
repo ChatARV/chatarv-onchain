@@ -65,12 +65,10 @@ export default function DevelopersPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-12 px-4 py-12 sm:px-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          Developers
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Developers</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Read published property valuations directly from the ChatARV Oracle
-          contract on Stellar, or pay per read over the ChatARV API using x402.
+          Read published property valuations directly from the ChatARV Oracle contract on Stellar,
+          or pay per read over the ChatARV API using x402.
         </p>
       </div>
 
@@ -90,13 +88,9 @@ export default function DevelopersPage() {
             {NETWORKS.map((n) => (
               <TabsContent key={n.key} value={n.key} className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/40 px-3 py-2">
-                  <span className="font-mono text-sm">
-                    {truncateMiddle(n.id, 10, 10)}
-                  </span>
+                  <span className="font-mono text-sm">{truncateMiddle(n.id, 10, 10)}</span>
                   <CopyButton value={n.id} label="Copy contract id" />
-                  <StellarLink className="ml-auto text-xs">
-                    stellar.expert
-                  </StellarLink>
+                  <StellarLink className="ml-auto text-xs">stellar.expert</StellarLink>
                 </div>
               </TabsContent>
             ))}
@@ -122,26 +116,23 @@ export default function DevelopersPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            The same valuation data is available over HTTP for agents and
-            services that would rather pay per call than read on-chain.
-            Endpoint:{" "}
+            The same valuation data is available over HTTP for agents and services that would rather
+            pay per call than read on-chain. Endpoint:{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
               GET /oracle/v1/valuation/:propertyKey
             </code>
           </p>
           <CodeBlock code={CURL_402_EXAMPLE} language="bash" comingSoon />
           <p className="text-xs text-muted-foreground">
-            Paying requires a Stellar wallet that supports auth-entry signing.
-            The API does not accept raw account keys.
+            Paying requires a Stellar wallet that supports auth-entry signing. The API does not
+            accept raw account keys.
           </p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            Reading from a Soroban contract client
-          </CardTitle>
+          <CardTitle className="text-base">Reading from a Soroban contract client</CardTitle>
         </CardHeader>
         <CardContent>
           <CodeBlock code={TS_SNIPPET} language="typescript" comingSoon />

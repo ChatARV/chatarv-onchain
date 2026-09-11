@@ -38,13 +38,7 @@ const MARKETS: Market[] = [
     city: "Henderson",
     state: "NV",
     zips: ["89011", "89014", "89015", "89052"],
-    streets: [
-      "Horizon Ridge Pkwy",
-      "Sunset Rd",
-      "Green Valley Pkwy",
-      "Wigwam Pkwy",
-      "Boulder Hwy",
-    ],
+    streets: ["Horizon Ridge Pkwy", "Sunset Rd", "Green Valley Pkwy", "Wigwam Pkwy", "Boulder Hwy"],
   },
   {
     city: "North Las Vegas",
@@ -108,25 +102,13 @@ const MARKETS: Market[] = [
     city: "Jacksonville",
     state: "FL",
     zips: ["32205", "32208", "32210", "32218", "32244"],
-    streets: [
-      "Blanding Blvd",
-      "Beach Blvd",
-      "Lem Turner Rd",
-      "Normandy Blvd",
-      "Soutel Dr",
-    ],
+    streets: ["Blanding Blvd", "Beach Blvd", "Lem Turner Rd", "Normandy Blvd", "Soutel Dr"],
   },
   {
     city: "Columbus",
     state: "OH",
     zips: ["43204", "43207", "43211", "43219", "43227"],
-    streets: [
-      "Sullivant Ave",
-      "Cleveland Ave",
-      "Livingston Ave",
-      "Parsons Ave",
-      "Refugee Rd",
-    ],
+    streets: ["Sullivant Ave", "Cleveland Ave", "Livingston Ave", "Parsons Ave", "Refugee Rd"],
   },
 ];
 

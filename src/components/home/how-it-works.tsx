@@ -40,15 +40,9 @@ export function HowItWorks() {
                 <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <step.icon className="size-5" />
                 </div>
-                <div className="text-xs font-medium text-muted-foreground">
-                  Step {i + 1}
-                </div>
-                <h3 className="text-base font-semibold text-foreground">
-                  {step.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {step.description}
-                </p>
+                <div className="text-xs font-medium text-muted-foreground">Step {i + 1}</div>
+                <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
               </CardContent>
             </Card>
           </BlurFade>

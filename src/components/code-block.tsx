@@ -74,7 +74,12 @@ export function CodeBlock({ code, language, filename, comingSoon, className }: C
   const syntaxTheme = resolvedTheme === "dark" ? DARK_SYNTAX_THEME : LIGHT_SYNTAX_THEME;
 
   return (
-    <div className={cn("relative flex w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/40", className)}>
+    <div
+      className={cn(
+        "relative flex w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/40",
+        className,
+      )}
+    >
       {showHeader && (
         <div className="flex items-center justify-between gap-2 border-b border-border/80 px-3 py-1.5">
           <div className="flex items-center gap-2">
@@ -92,7 +97,11 @@ export function CodeBlock({ code, language, filename, comingSoon, className }: C
       )}
 
       <ScrollArea className="w-full">
-        <SyntaxHighlighter language={language} style={syntaxTheme} customStyle={{ display: "block", margin: 0 }}>
+        <SyntaxHighlighter
+          language={language}
+          style={syntaxTheme}
+          customStyle={{ display: "block", margin: 0 }}
+        >
           {code.trim()}
         </SyntaxHighlighter>
         <ScrollBar orientation="horizontal" />

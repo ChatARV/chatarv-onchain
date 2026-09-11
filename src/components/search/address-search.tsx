@@ -76,7 +76,12 @@ export function AddressSearch({ variant = "header", className }: AddressSearchPr
         </div>
       )}
 
-      <CommandDialog open={open} onOpenChange={setOpen} title="Search an address" description="Search properties published to ChatARV Oracle">
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Search an address"
+        description="Search properties published to ChatARV Oracle"
+      >
         <Command shouldFilter>
           <CommandInput placeholder="Search by address, city, or zip…" />
           <CommandList>

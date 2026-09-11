@@ -68,8 +68,8 @@ export default function PublishPage() {
           Publish a valuation
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Hand a lender a link instead of a PDF. Preview the unbiased-mode
-          result, then publish it to Stellar.
+          Hand a lender a link instead of a PDF. Preview the unbiased-mode result, then publish it
+          to Stellar.
         </p>
         <Badge variant="secondary" className="mt-3">
           No ChatARV account needed
@@ -144,9 +144,7 @@ export default function PublishPage() {
               <CheckCircle2 className="size-5 text-primary" />
               Published
             </CardTitle>
-            <CardDescription>
-              Signed by ChatARV and published on Stellar.
-            </CardDescription>
+            <CardDescription>Signed by ChatARV and published on Stellar.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-2">
@@ -167,8 +165,8 @@ export default function PublishPage() {
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Share the property page link with a lender instead of a PDF. It
-              always reflects the latest signed value.
+              Share the property page link with a lender instead of a PDF. It always reflects the
+              latest signed value.
             </p>
           </CardContent>
         </Card>

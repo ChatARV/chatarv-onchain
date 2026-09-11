@@ -6,18 +6,10 @@ export function normalizeAddress(
   state: string,
   zip: string,
 ): string {
-  return `${address}, ${city}, ${state} ${zip}`
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
+  return `${address}, ${city}, ${state} ${zip}`.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-export function propertyKey(
-  address: string,
-  city: string,
-  state: string,
-  zip: string,
-): string {
+export function propertyKey(address: string, city: string, state: string, zip: string): string {
   const normalized = normalizeAddress(address, city, state, zip);
   return createHash("sha256").update(normalized).digest("hex");
 }

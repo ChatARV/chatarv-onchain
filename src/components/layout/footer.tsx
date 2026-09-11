@@ -9,8 +9,7 @@ export function Footer() {
           <div className="space-y-3">
             <Logo />
             <p className="max-w-sm text-sm text-muted-foreground">
-              A public explorer for property values signed by ChatARV and
-              published on Stellar.
+              A public explorer for property values signed by ChatARV and published on Stellar.
             </p>
           </div>
 

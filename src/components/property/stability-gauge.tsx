@@ -25,7 +25,10 @@ export function StabilityGauge({ value, size = 128, className }: StabilityGaugeP
   const color = toneForValue(clamped);
 
   return (
-    <div className={cn("relative inline-flex items-center justify-center", className)} style={{ width: size, height: size }}>
+    <div
+      className={cn("relative inline-flex items-center justify-center", className)}
+      style={{ width: size, height: size }}
+    >
       <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2}
@@ -53,9 +56,7 @@ export function StabilityGauge({ value, size = 128, className }: StabilityGaugeP
         <span className="font-mono text-2xl font-semibold tabular-nums text-foreground">
           {Math.round(clamped)}
         </span>
-        <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
-          Stability
-        </span>
+        <span className="text-[10px] uppercase tracking-wide text-muted-foreground">Stability</span>
       </div>
     </div>
   );

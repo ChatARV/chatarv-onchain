@@ -22,9 +22,7 @@ function FeedRow({ entry }: { entry: FeedEntry }) {
         </p>
       </div>
       <div className="hidden shrink-0 text-right sm:block">
-        <p className="font-mono text-sm tabular-nums text-foreground">
-          {formatUsd(entry.arv)}
-        </p>
+        <p className="font-mono text-sm tabular-nums text-foreground">{formatUsd(entry.arv)}</p>
         <p className="text-xs text-muted-foreground">ARV</p>
       </div>
       <Badge variant="secondary" className="shrink-0 tabular-nums">
@@ -41,9 +39,7 @@ export function LiveFeed() {
   return (
     <section className="mx-auto max-w-4xl px-4 py-20 sm:px-6">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-          Recent publishes
-        </h2>
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground">Recent publishes</h2>
         <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <span className="relative flex size-2">
             <span className="absolute inline-flex size-full rounded-full bg-primary" />

@@ -13,15 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime, formatTimeAgo, formatUsd } from "@/lib/format";
-import {
-  truncateMiddle,
-} from "@/lib/stellar";
+import { truncateMiddle } from "@/lib/stellar";
 
-export default function PropertyPage({
-  params,
-}: {
-  params: Promise<{ key: string }>;
-}) {
+export default function PropertyPage({ params }: { params: Promise<{ key: string }> }) {
   const { key } = use(params);
   const { data: property, isLoading, isError } = useProperty(key);
   const { data: reads } = useReads(key);
@@ -43,9 +37,7 @@ export default function PropertyPage({
   if (isError || !property) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
-        <h1 className="text-xl font-semibold text-foreground">
-          Property not found
-        </h1>
+        <h1 className="text-xl font-semibold text-foreground">Property not found</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           No published value exists for this property key.
         </p>
@@ -78,21 +70,15 @@ export default function PropertyPage({
 
         <div className="text-left sm:text-right">
           <p className="text-xs text-muted-foreground">Last published</p>
-          <p className="text-sm font-medium text-foreground">
-            {formatTimeAgo(latest.publishedAt)}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {formatDateTime(latest.publishedAt)}
-          </p>
+          <p className="text-sm font-medium text-foreground">{formatTimeAgo(latest.publishedAt)}</p>
+          <p className="text-xs text-muted-foreground">{formatDateTime(latest.publishedAt)}</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              As-Is Value
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">As-Is Value</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="font-mono text-3xl font-semibold tabular-nums text-foreground">
@@ -106,9 +92,7 @@ export default function PropertyPage({
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              ARV
-            </CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">ARV</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="font-mono text-3xl font-semibold tabular-nums text-foreground">

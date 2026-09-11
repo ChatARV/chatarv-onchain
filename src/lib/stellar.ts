@@ -38,17 +38,11 @@ export function explorerContractUrl(
   return `https://stellar.expert/explorer/${network}/contract/${contractId}`;
 }
 
-export function explorerTxUrl(
-  txHash: string,
-  network: StellarNetwork = "public",
-): string {
+export function explorerTxUrl(txHash: string, network: StellarNetwork = "public"): string {
   return `https://stellar.expert/explorer/${network}/tx/${txHash}`;
 }
 
-export function explorerAccountUrl(
-  accountId: string,
-  network: StellarNetwork = "public",
-): string {
+export function explorerAccountUrl(accountId: string, network: StellarNetwork = "public"): string {
   return `https://stellar.expert/explorer/${network}/account/${accountId}`;
 }
 
