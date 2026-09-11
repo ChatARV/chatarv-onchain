@@ -7,7 +7,8 @@ import json from "react-syntax-highlighter/dist/esm/languages/prism/json";
 import rust from "react-syntax-highlighter/dist/esm/languages/prism/rust";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import typescript from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
-import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useTheme } from "next-themes";
 import { useCopy } from "@/hooks/use-copy";
 import { useMounted } from "@/hooks/use-mounted";
 import { cn } from "@/lib/utils";
@@ -26,24 +27,29 @@ type Language = "tsx" | "typescript" | "bash" | "json" | "rust";
 
 const SHELL_LANGUAGES: readonly Language[] = ["bash"];
 
-const syntaxTheme = {
-  ...oneLight,
-  'pre[class*="language-"]': {
-    ...oneLight['pre[class*="language-"]'],
-    background: "transparent",
-    margin: 0,
-    padding: "1rem",
-    minWidth: "100%",
-    width: "max-content",
-    overflow: "visible",
-  },
-  'code[class*="language-"]': {
-    ...oneLight['code[class*="language-"]'],
-    background: "transparent",
-    fontSize: "0.75rem",
-    fontFamily: "var(--font-mono)",
-  },
-};
+function buildSyntaxTheme(base: typeof oneLight) {
+  return {
+    ...base,
+    'pre[class*="language-"]': {
+      ...base['pre[class*="language-"]'],
+      background: "transparent",
+      margin: 0,
+      padding: "1rem",
+      minWidth: "100%",
+      width: "max-content",
+      overflow: "visible",
+    },
+    'code[class*="language-"]': {
+      ...base['code[class*="language-"]'],
+      background: "transparent",
+      fontSize: "0.75rem",
+      fontFamily: "var(--font-mono)",
+    },
+  };
+}
+
+const LIGHT_SYNTAX_THEME = buildSyntaxTheme(oneLight);
+const DARK_SYNTAX_THEME = buildSyntaxTheme(oneDark);
 
 interface CodeBlockProps {
   code: string;
@@ -56,6 +62,7 @@ interface CodeBlockProps {
 export function CodeBlock({ code, language, filename, comingSoon, className }: CodeBlockProps) {
   const mounted = useMounted();
   const { copied, handleCopy } = useCopy();
+  const { resolvedTheme } = useTheme();
 
   const isShell = SHELL_LANGUAGES.includes(language);
   const showHeader = comingSoon || !isShell || Boolean(filename);
@@ -63,6 +70,8 @@ export function CodeBlock({ code, language, filename, comingSoon, className }: C
   if (!mounted) {
     return <div className={cn("h-24 w-full animate-pulse rounded-lg bg-muted", className)} />;
   }
+
+  const syntaxTheme = resolvedTheme === "dark" ? DARK_SYNTAX_THEME : LIGHT_SYNTAX_THEME;
 
   return (
     <div className={cn("relative flex w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/40", className)}>
