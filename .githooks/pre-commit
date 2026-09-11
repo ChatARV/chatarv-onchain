@@ -1,0 +1,13 @@
+#!/bin/sh
+# Reject commits not authored and committed as the project identity.
+NAME="chatarv-engineering"
+EMAIL="chatarv25@gmail.com"
+for who in GIT_AUTHOR_IDENT GIT_COMMITTER_IDENT; do
+  ident=$(git var "$who")
+  case "$ident" in
+    "$NAME <$EMAIL> "*) ;;
+    *) echo "commit blocked: $who must be $NAME <$EMAIL>"
+       echo "run: git config user.name $NAME && git config user.email $EMAIL"
+       exit 1 ;;
+  esac
+done

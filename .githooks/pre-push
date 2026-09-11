@@ -1,0 +1,14 @@
+#!/bin/sh
+# Reject pushes containing commits with any other author or committer.
+NAME="chatarv-engineering"
+EMAIL="chatarv25@gmail.com"
+zero=0000000000000000000000000000000000000000
+while read -r _ local_sha _ remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue
+  if [ "$remote_sha" = "$zero" ]; then range="$local_sha"; else range="$remote_sha..$local_sha"; fi
+  bad=$(git log --format='%an <%ae>|%cn <%ce>' "$range" | grep -v -x -F "$NAME <$EMAIL>|$NAME <$EMAIL>" || true)
+  if [ -n "$bad" ]; then
+    echo "push blocked: commits with an unexpected author or committer found"
+    exit 1
+  fi
+done
