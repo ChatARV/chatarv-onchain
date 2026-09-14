@@ -22,6 +22,11 @@ const PROPERTY_COUNT = 200;
 const MODEL_VERSIONS = ["arv-3.2.1", "arv-3.3.0", "arv-3.3.1"] as const;
 const CONSUMER_TYPES: readonly ConsumerType[] = ["lending", "tokenization", "vault"];
 const DAY_MS = 24 * 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
+// Latest publish per property lands 3-5 minutes before "now", not literally
+// "now" — a real feed never has every timestamp match the page-load instant.
+const MOST_RECENT_PUBLISH_MIN_MINUTES = 3;
+const MOST_RECENT_PUBLISH_MAX_MINUTES = 5;
 
 const MARKET_BASE_VALUE: Record<string, number> = {
   NV: 380000,
@@ -68,7 +73,11 @@ function buildValuationHistory(
   const base = (MARKET_BASE_VALUE[state] ?? 350000) * rng.float(0.7, 1.4);
 
   const timestamps: Date[] = [];
-  let cursor = new Date(now.getTime() - rng.int(0, 6) * DAY_MS);
+  const mostRecentOffsetMinutes = rng.float(
+    MOST_RECENT_PUBLISH_MIN_MINUTES,
+    MOST_RECENT_PUBLISH_MAX_MINUTES,
+  );
+  let cursor = new Date(now.getTime() - mostRecentOffsetMinutes * MINUTE_MS);
   for (let i = 0; i < publishCount; i++) {
     timestamps.unshift(new Date(cursor));
     cursor = new Date(cursor.getTime() - rng.int(18, 70) * DAY_MS);

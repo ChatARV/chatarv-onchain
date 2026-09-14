@@ -14,6 +14,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ORACLE_CONTRACT_IDS, truncateMiddle } from "@/lib/stellar";
 import { STABILITY_FACTORS } from "@/lib/stability";
+import { X402_FEE_USDC } from "@/lib/pricing";
+import { formatUsdFee } from "@/lib/format";
 
 const SEP40_INTERFACE = `// SEP-40-style read interface
 fn lastprice(asset: Asset) -> Option<PriceData>;
@@ -37,7 +39,7 @@ curl -i https://api.chatarv.ai/oracle/v1/valuation/{propertyKey}
 
 HTTP/1.1 402 Payment Required
 X-Payment-Address: <oracle payment account>
-X-Payment-Amount: 0.02
+X-Payment-Amount: ${X402_FEE_USDC}
 X-Payment-Asset: USDC
 
 # 2. Retry with a signed payment authorization attached
@@ -61,11 +63,34 @@ async function readLastPrice(propertyKey: string) {
   return tx;
 }`;
 
-const STABILITY_FORMULA = `for each of the 7 factors:
-  normalized = clamp((value - min) / (max - min), 0, 1)
-  if "lower is better": normalized = 1 - normalized
+const STABILITY_FORMULA = `interface StabilityFactor {
+  key: keyof StabilityInputs;
+  weight: number;              // all 7 weights sum to 1
+  better: "higher" | "lower";
+  range: [min: number, max: number]; // observed low/high for this factor
+}
 
-stabilityIndex = round(clamp(sum(weight * normalized), 0, 1) * 100)`;
+// Rescales a raw value to a 0-1 "goodness" score: min maps to the worst
+// score, max maps to the best, and anything outside the range is clamped
+// so a single outlier can't blow up the index.
+function normalizeFactor(factor: StabilityFactor, value: number): number {
+  const [min, max] = factor.range;
+  const t = Math.min(1, Math.max(0, (value - min) / (max - min)));
+  return factor.better === "higher" ? t : 1 - t;
+}
+
+// Weighted sum of every factor's 0-1 score, scaled to 0-100 and rounded.
+// Deterministic: the same 7 inputs always produce the same index.
+function computeStabilityIndex(
+  inputs: StabilityInputs,
+  factors: StabilityFactor[],
+): number {
+  const score = factors.reduce(
+    (sum, factor) => sum + factor.weight * normalizeFactor(factor, inputs[factor.key]),
+    0,
+  );
+  return Math.round(Math.min(1, Math.max(0, score)) * 100);
+}`;
 
 const NETWORKS = [
   {
@@ -125,9 +150,9 @@ export default function DevelopersPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            The index is a weighted average of seven inputs, each normalized to a 0-1 &quot;goodness&quot;
-            score before weighting, then scaled to 0-100. It is derived, not random: two properties
-            with the same inputs always get the same index.
+            The index is a weighted average of seven inputs, each normalized to a 0-1
+            &quot;goodness&quot; score before weighting, then scaled to 0-100. It is derived, not
+            random: two properties with the same inputs always get the same index.
           </p>
           <div className="overflow-x-auto">
             <Table>
@@ -144,7 +169,9 @@ export default function DevelopersPage() {
                   <TableRow key={factor.key}>
                     <TableCell>{factor.label}</TableCell>
                     <TableCell>{Math.round(factor.weight * 100)}%</TableCell>
-                    <TableCell>{factor.better === "higher" ? "Higher is better" : "Lower is better"}</TableCell>
+                    <TableCell>
+                      {factor.better === "higher" ? "Higher is better" : "Lower is better"}
+                    </TableCell>
                     <TableCell className="text-right font-mono text-xs">
                       {factor.range[0]}–{factor.range[1]}
                       {factor.unit}
@@ -171,7 +198,7 @@ export default function DevelopersPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             x402 pay-per-read
-            <Badge variant="secondary">$0.02 USDC / read</Badge>
+            <Badge variant="secondary">{formatUsdFee(X402_FEE_USDC)} / read</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
